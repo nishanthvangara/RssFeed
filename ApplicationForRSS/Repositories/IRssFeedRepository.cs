@@ -11,5 +11,6 @@ namespace ApplicationForRSS.Repositories
         bool FeedExists(int id);
         RssFeedDto GetRssFeedPassingId(int id);
         void UpDateRssFeed(RssFeedDto feedDto);
+        bool Save();
     }
 }

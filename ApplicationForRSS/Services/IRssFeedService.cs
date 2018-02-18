@@ -11,6 +11,7 @@ namespace ApplicationForRSS.Services
         bool FeedExists(int id);
         void UpdateRssFeed(int id, RssFeedDto feedToBeUpdatedDto);
         void PartiallyUpdateRssFeed(int id, RssFeedDto feedToPatch);
-        void StoreFeed(string data);
+        void GetRssFeedFromAlikatte(string url);
+        bool Save();
     }
 }

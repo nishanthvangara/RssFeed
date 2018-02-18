@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace ApplicationForRSS.Controllers
@@ -126,20 +128,11 @@ namespace ApplicationForRSS.Controllers
         }
 
         [HttpGet("GetRssFeedFromarAlikatte")]
-        public async Task<IActionResult> GetRssFeedFromarAlikatte()
+        public IActionResult GetRssFeedFromAlikatte()
         {
             string baseUrl = "http://www.aralikatte.com/feed/";
-
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage res = await client.GetAsync(baseUrl))
-                if (res.Content.Headers.ContentType.MediaType == "application/json")
-                {
-                    // parse json
-                }
-                else
-                {
-                    
-                }
+            _rssFeedService.GetRssFeedFromAlikatte(baseUrl);
+            _rssFeedService.Save();
             return Ok();
         }        
     }

@@ -16,17 +16,16 @@ namespace ApplicationForRSS.Repositories
         }
 
         public void CreateRssFeed(RssFeedDto feedToBeCreatedDto)
-        {
+        {           
             var rssFeedEntity = Mapper.Map<RssFeed>(feedToBeCreatedDto);
-            _context.RssFeed.Add(rssFeedEntity);
-            _context.SaveChanges();
+            _context.RssFeed.Add(rssFeedEntity);          
+
         }
 
         public void DeleteRssFeed(RssFeedDto feedToBeDelete)
         {
             var rssFeedEntity = Mapper.Map<RssFeed>(feedToBeDelete);
             _context.RssFeed.Remove(rssFeedEntity);
-            _context.SaveChanges();
         }
 
         public bool FeedExists(int id)
@@ -54,7 +53,13 @@ namespace ApplicationForRSS.Repositories
         {
             var rssFeedEntity = Mapper.Map<RssFeed>(feedDto);
             _context.RssFeed.Remove(rssFeedEntity);
-            _context.SaveChanges();
+
+
+        }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
         }
     }
 }

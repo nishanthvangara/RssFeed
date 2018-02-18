@@ -27,6 +27,7 @@ namespace ApplicationForRSS
 
             context.Add(feed);
             context.SaveChanges();
+
         }
     }
 }

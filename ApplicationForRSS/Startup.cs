@@ -23,13 +23,11 @@ namespace ApplicationForRSS
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddMvcOptions(option => option.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
-            
+            services.AddMvc().AddMvcOptions(option => option.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));            
             var connectionString = Startup.Configuration["connectionStrings:DBConnectionString"];
             services.AddDbContext<RssFeedContext>(o => o.UseSqlServer(connectionString));
-
             services.AddScoped<IRssFeedRepository, RssFeedRepository>();
-            services.AddScoped<IRssFeedService, RssFeedService>();
+            services.AddScoped<IRssFeedService, RssFeedService>();           
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, RssFeedContext rssFeedContext)
@@ -47,11 +45,9 @@ namespace ApplicationForRSS
                 cfg.CreateMap<DomainObjects.RssFeedDomainObj, Models.RssFeedDto>();
                 cfg.CreateMap<Models.RssFeedDto, Entities.RssFeed>();
             });
-
-
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                await context.Response.WriteAsync("Rss Feed Service is running");
             });
         }
     }

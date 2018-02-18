@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Xml;
+using ApplicationForRSS.Helpers;
 using ApplicationForRSS.Models;
 using ApplicationForRSS.Repositories;
 using AutoMapper;
@@ -43,25 +46,13 @@ namespace ApplicationForRSS.Services
 
         public void PartiallyUpdateRssFeed(int id, RssFeedDto feedToPatch)
         {
-            throw new NotImplementedException();
-        }
+            var feedDto = _rssFeedRepository.GetRssFeedPassingId(id);
+            feedDto.Source = feedToPatch.Source;
+            feedDto.Description = feedToPatch.Description;
+            feedDto.DateTime = feedToPatch.DateTime;
+            feedDto.CreateDateTime = DateTime.Now;
 
-        public void StoreFeed(string data)
-        {
-
-           
-            //var rssFeedDto = Mapper.Map<RssFeedDto>(data);
-            dynamic stuff = JsonConvert.DeserializeObject(data);
-
-            string name = stuff;
-            string address = stuff.Address.City;
-            using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(data)))
-            {
-                // Deserialization from JSON  
-                DataContractJsonSerializer deserializer = new DataContractJsonSerializer(typeof(MyClass));
-                MyClass bsObj2 = (MyClass)deserializer.ReadObject(ms);
-            }
-            _rssFeedRepository.CreateRssFeed(null);
+            _rssFeedRepository.UpDateRssFeed(feedDto);
         }
 
         public void UpdateRssFeed(int id, RssFeedDto feedToBeUpdatedDto)
@@ -74,12 +65,26 @@ namespace ApplicationForRSS.Services
 
             _rssFeedRepository.UpDateRssFeed(feedDto);
         }
-    }
 
-    public class MyClass
-    {
-        // extra fields
-        [JsonExtensionData]
-        private IDictionary<string, JToken> _extraStuff;
+        public async void GetRssFeedFromAlikatte(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage res = await client.GetAsync(url))
+                if (res.Content.Headers.ContentType.MediaType == "application/json")
+                {
+                    // parse json
+                }
+                else
+                {
+                    // parse XML
+                    var obj = XmlToRSS.GetDataAndParseToDto(url);
+                    CreateRssFeed(obj);
+                }
+        }
+
+        public bool Save()
+        {
+            return (_rssFeedRepository.Save());
+        }
     }
 }
